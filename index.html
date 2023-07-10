@@ -191,7 +191,7 @@
                     if (correct === width) {
                         let res = "🤣🤣 쟁이쿼들 "+row.toString()+"/6\n\n"+records;
                         navigator.clipboard.writeText(res);
-                        alert("결과 클립보드에 복사됨");
+                        setTimeout(function(){ alert("결과 클립보드에 복사됨"); }, 500);
                         gameOver = true;
                     }
                 }
