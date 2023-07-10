@@ -15,7 +15,7 @@ hr {
 
 #board {
     width: 420px;
-    height: 420 px;
+    height: 360 px;
     margin: 100px auto;
     margin-top: 3px;
     display: flex;
