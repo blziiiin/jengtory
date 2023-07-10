@@ -19,24 +19,29 @@
         <br>
         <h1 id="answer"></h1>
         
+        <br>
+        <div id="keypad">
+
+        </div>
+        
 <!--        키패드 만들기-->
-        <input id = "0" type="button" value="0" onclick="fillBox(0)"/>
-        <input id = "1" type="button" value="1" onclick="fillBox(1)"/>
-        <input id = "2" type="button" value="2" onclick="fillBox(2)"/>
-        <input id = "3" type="button" value="3" onclick="fillBox(3)"/>
-        <input id = "4" type="button" value="4" onclick="fillBox(4)"/>
-        <input id = "5" type="button" value="5" onclick="fillBox(5)"/>
-        <input id = "6" type="button" value="6" onclick="fillBox(6)"/>
-        <input id = "7" type="button" value="7" onclick="fillBox(7)"/>
-        <input id = "8" type="button" value="8" onclick="fillBox(8)"/>
-        <input id = "9" type="button" value="9" onclick="fillBox(9)"/>
-        <input type="button" value="+" onclick="fillBox2(0)"/>
-        <input type="button" value="-" onclick="fillBox2(1)"/>
-        <input type="button" value="×" onclick="fillBox2(2)"/>
-        <input type="button" value="÷" onclick="fillBox2(3)"/>
-        <input id = "=" type="button" value="=" onclick="fillBox2(4)"/>
-        <input type="button" value="Backspace" onclick="erase()"/>
-        <input type="button" value="Enter" onclick="enter()"/>
+        <input id="0" type="button" class="pad" value="0" onclick="fillBox(0)"/>
+        <input id="1" type="button" class="pad" value="1" onclick="fillBox(1)"/>
+        <input id="2" type="button" class="pad" value="2" onclick="fillBox(2)"/>
+        <input id="3" type="button" class="pad" value="3" onclick="fillBox(3)"/>
+        <input id="4" type="button" class="pad" value="4" onclick="fillBox(4)"/>
+        <input id="5" type="button" class="pad" value="5" onclick="fillBox(5)"/>
+        <input id="6" type="button" class="pad" value="6" onclick="fillBox(6)"/>
+        <input id="7" type="button" class="pad" value="7" onclick="fillBox(7)"/>
+        <input id="8" type="button" class="pad" value="8" onclick="fillBox(8)"/>
+        <input id="9" type="button" class="pad" value="9" onclick="fillBox(9)"/>
+        <input id="+" type="button" class="pad" value="+" onclick="fillBox2(0)"/>
+        <input id="-" type="button" class="pad" value="-" onclick="fillBox2(1)"/>
+        <input id="×" type="button" class="pad" value="×" onclick="fillBox2(2)"/>
+        <input id="÷" type="button" class="pad" value="÷" onclick="fillBox2(3)"/>
+        <input id="=" type="button" class="pad" value="=" onclick="fillBox2(4)"/>
+        <input id="b" type="button" class="longpad" value="Erase" onclick="erase()"/>
+        <input id="e" type="button" class="longpad" value="Enter" onclick="enter()"/>
 
         <script>
             let height = 6; // 줄 갯수 
@@ -49,6 +54,15 @@
             let word = "2×9=18";
             
             window.onload = function() {
+                for (let i=0; i<10; i++) {
+                    document.getElementById("keypad").appendChild(document.getElementById(i.toString()));
+                }
+                for (let i=0; i<5; i++) {
+                    document.getElementById("keypad").appendChild(document.getElementById("+-×÷="[i].toString()));
+                }
+                document.getElementById("keypad").appendChild(document.getElementById("b"));
+                document.getElementById("keypad").appendChild(document.getElementById("e"));
+                
                 initialize();
             };
             
@@ -92,6 +106,7 @@
                         col += 1;
                     }
                     let target = document.getElementById(w.toString());
+                    target.classList.add("disabled_pad");
                     target.disabled = true;
                 }
             };
@@ -108,6 +123,7 @@
                 }
                 if (w === 4) {
                     let target = document.getElementById("=");
+                    target.classList.add("disabled_pad");
                     target.disabled = true;
                 }
             };
@@ -121,7 +137,9 @@
                 let currTile = document.getElementById(row.toString() + '-' + col.toString());
                 let w = currTile.innerText;
                 if ("0123456789=".includes(w)) {
-                    document.getElementById(w).disabled = false;
+                    let target = document.getElementById(w);
+                    target.classList.remove("disabled_pad");
+                    target.disabled = false;
                 }
                 currTile.innerText = "";
             };
@@ -129,11 +147,13 @@
             function enter() {
                 // 키패드를 누르면 실행되는 부분
                 if(gameOver) return;
-                if (col === width) {
+                if (col === width && validation()) {
                     update();
                     // 다시 모든 버튼 활성화
                     for (let i = 0; i<11; i++) {
-                        document.getElementById("0123456789="[i]).disabled = false;
+                        let target = document.getElementById("0123456789="[i]);
+                        target.classList.remove("disabled_pad");
+                        target.disabled = false;
                     }
                     row += 1; // start new row
                     col = 0;  // start at 0 for new row
@@ -167,6 +187,108 @@
                     }
                 }
             };
+            
+            function validation() {
+                // 수식이 유효한지 확인
+                let letter = "";
+                for (let c = 0; c < width; c++) {
+                    let currTile = document.getElementById(row.toString() + '-' + c.toString());
+                    letter += currTile.innerText;
+                }
+                // = 은 2~5번째 칸에 반드시 있어야 한다.
+                let eq = letter.indexOf("=");
+                if (eq <= 0 || eq >= 5) {
+                    for (let c = 0; c < width; c++) {
+                        let currTile = document.getElementById(row.toString() + '-' + c.toString());
+                        currTile.classList.add("temp");
+                    }
+                    setTimeout(function(){
+                        for (let c = 0; c < width; c++) {
+                            let currTile = document.getElementById(row.toString() + '-' + c.toString());
+                            currTile.classList.remove("temp");
+                        }
+                    }, 200);
+                    return false;
+                }
+                // 왼쪽 식을 계산
+                let left = 0;
+                let temp_l = 0;
+                let op_l = "=";
+                for (let i = 0; i<eq; i++) {
+                    if ("0123456789".includes(letter[i])) {
+                        temp_l *= 10;
+                        temp_l += parseInt(letter[i]);
+                    }
+                    else {
+                        left = temp_l;
+                        op_l = letter[i];
+                        temp_l = 0;
+                    }
+                }
+                switch(op_l) {
+                    case "=": // just value
+                        left = temp_l;
+                        break;
+                    case "+": // +
+                        left += temp_l;
+                        break;
+                    case "-":
+                        left -= temp_l;
+                        break;
+                    case "×":
+                        left *= temp_l;
+                        break;
+                    case "÷":
+                        left /= temp_l;
+                        break;
+                }
+                // 오른쪽 식을 계산
+                let right = 0;
+                let temp_r = 0;
+                let op_r = "=";
+                for (let i =eq + 1; i<letter.length; i++) {
+                    if ("0123456789".includes(letter[i])) {
+                        temp_r *= 10;
+                        temp_r += parseInt(letter[i]);
+                    }
+                    else {
+                        right = temp_r;
+                        op_r = letter[i];
+                        temp_r = 0;
+                    }
+                }
+                switch(op_r) {
+                    case "=": // just value
+                        right = temp_r;
+                        break;
+                    case "+": // +
+                        right += temp_r;
+                        break;
+                    case "-":
+                        right -= temp_r;
+                        break;
+                    case "×":
+                        right *= temp_r;
+                        break;
+                    case "÷":
+                        right /= temp_r;
+                        break;
+                }
+                
+                if (left === right) return true;
+                // 틀렸다는 이펙트 표시
+                for (let c = 0; c < width; c++) {
+                    let currTile = document.getElementById(row.toString() + '-' + c.toString());
+                    currTile.classList.add("temp");
+                }
+                setTimeout(function(){
+                    for (let c = 0; c < width; c++) {
+                        let currTile = document.getElementById(row.toString() + '-' + c.toString());
+                        currTile.classList.remove("temp");
+                    }
+                }, 200);
+                return false;
+            }
         </script>
     </body>
 </html>

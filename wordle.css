@@ -1,10 +1,19 @@
+.my_keypad {
+    background-color: slategrey;
+    color: white;
+    border: none;
+  
+    width: 35px;
+    height: 50px;
+}
+
 body {
     font-family: Arial, Helvetica, sans-serif;
     text-align: center;
 }
 
 hr {
-    width: 500px; 
+    width: 400px; 
 }
 
 #title {
@@ -14,7 +23,7 @@ hr {
 }
 
 #board {
-    width: 420px;
+    width: 415px;
     height: 360 px;
     margin: 100px auto;
     margin-top: 3px;
@@ -28,6 +37,7 @@ hr {
     width: 60px;
     height: 60px;
     margin: 2.5px;
+    border-radius: 10%;
 
     /* text */
     color: black;
@@ -62,8 +72,25 @@ hr {
     border-color: white;
 }
 
+.temp {
+    /* box */
+    border: 2px solid red;
+    width: 60px;
+    height: 60px;
+    margin: 2.5px;
+    border-radius: 10%;
+
+    /* text */
+    color: black;
+    font-size: 36px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 #keypad {
-    width: 420px;
+    width: 400px;
     height: 200 px;
     margin: 100px auto;
     margin-top: 3px;
@@ -73,16 +100,62 @@ hr {
 
 .pad {
     /* box */
-    border: 2px solid grey;
+    border: 2px solid darkgray;
+    background-color: darkgray;
     width: 35px;
     height: 50px;
     margin: 2.5px;
+    border-radius: 10%;
 
     /* text */
-    color: black;
+    color: white;
     font-size: 32px;
     font-weight: bold;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.pad:active {
+    background-color: dimgray;
+}
+
+.disabled_pad {
+    /* box */
+    border: 2px solid dimgray;
+    background-color: dimgray;
+    width: 35px;
+    height: 50px;
+    margin: 2.5px;
+    border-radius: 10%;
+
+    /* text */
+    color: white;
+    font-size: 32px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.longpad {
+    /* box */
+    border: 2px solid darkgray;
+    background-color: darkgray;
+    width: 95px;
+    height: 50px;
+    margin: 2.5px;
+    border-radius: 5px;
+
+    /* text */
+    color: white;
+    font-size: 30px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.longpad:active {
+    background-color: dimgray;
 }
