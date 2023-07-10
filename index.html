@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="wordle.css">
     </head>
     <body>
-        <h1 id="title">Equadle</h1>
+        <h1 id="title">JaengEquadle</h1>
         <hr>
         <br>
         <div id="board">
@@ -44,7 +44,7 @@
         <input id="e" type="button" class="longpad" value="Enter" onclick="enter()"/>
 
         <script>
-            let height = 6; // 줄 갯수 
+            let height = 7; // 줄 갯수 
             let width = 6; // 단어 길이
 
             let row = 0; // 현재 줄 (attempt #)
@@ -52,6 +52,8 @@
 
             let gameOver = false;
             let word = "2×9=18";
+            
+            let records = "";
             
             window.onload = function() {
                 for (let i=0; i<10; i++) {
@@ -155,6 +157,7 @@
                         target.classList.remove("disabled_pad");
                         target.disabled = false;
                     }
+                    records += "\n";
                     row += 1; // start new row
                     col = 0;  // start at 0 for new row
                 }
@@ -174,15 +177,21 @@
                     if (word[c] === letter) {
                         currTile.classList.add("correct");
                         correct += 1;
+                        records += "🟩";
                     } // letter가 정답에 존재하는가? 
                     else if (word.includes(letter)) {
                         currTile.classList.add("present");
+                        records += "🟨";
                     } // letter 정답에 없음? 
                     else {
                         currTile.classList.add("absent");
+                        records += "⬜";
                     }
                     // 정답을 맞추면 게임오버 
                     if (correct === width) {
+                        let res = "🤣🤣 쟁이쿼들 "+row.toString()+"/6\n\n"+records;
+                        navigator.clipboard.writeText(res);
+                        alert("결과 클립보드에 복사됨");
                         gameOver = true;
                     }
                 }
