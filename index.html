@@ -15,9 +15,6 @@
         <div id="board">
 
         </div>
-
-        <br>
-        <h1 id="answer"></h1>
         
         <br>
         <div id="keypad">
@@ -51,7 +48,7 @@
             let col = 0; // 현재 알파벳 인덱스 
 
             let gameOver = false;
-            let word = "2×9=18";
+            let word = "21÷3=7";
             
             let records = "";
             
@@ -162,8 +159,11 @@
                     col = 0;  // start at 0 for new row
                 }
                 if (!gameOver && row === height) {
+                    let res = "😭😭 쟁이쿼들 실패!\n\n"+records;
+                    navigator.clipboard.writeText(res);
+                    setTimeout(function(){ alert("결과 클립보드에 복사됨"); }, 500);
                     gameOver = true;
-                    document.getElementById("answer").innerText = word;
+//                    document.getElementById("answer").innerText = word;
                 }
             };
             
@@ -189,7 +189,7 @@
                     }
                     // 정답을 맞추면 게임오버 
                     if (correct === width) {
-                        let res = "🤣🤣 쟁이쿼들 "+row.toString()+"/6\n\n"+records;
+                        let res = "🤣🤣 쟁이쿼들 성공! "+row.toString()+"/6\n\n"+records;
                         navigator.clipboard.writeText(res);
                         setTimeout(function(){ alert("결과 클립보드에 복사됨"); }, 500);
                         gameOver = true;
