@@ -1,303 +1,169 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>JengDle</title>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE-edge">
-        <meta name="viewport" content="width=device-width,initial-scale=1.0">
-
-        <link rel="stylesheet" href="wordle.css">
-    </head>
-    <body>
-        <h1 id="title">JaengEquadle</h1>
-        <hr>
-        <br>
-        <div id="board">
-
-        </div>
+<head>
+    <meta charset="utf-8">
+</head>
+<body>
+    <header style="text-align: center; margin-left: auto; margin-right: auto; background-color: cornsilk; color: chocolate">
+        <h1>ColorCopy</h1>
+    </header>
+    <div style="text-align: center; margin-left: auto; margin-right: auto">
+        <!-- 네모 그림 -->
+        <table style="text-align: center; margin-left: auto; margin-right: auto" height="150">
+            <td id="qst" style="background-color: #000000" width="150">make<br>me</td>
+            <td id="ans" style="background-color: #000000" width="150">here</td>
+        </table>
+    </div><br>
+    <div style="text-align: center;">
+        <!-- 조절 바 -->
+        <button id="red" style = "border: none; border-radius: 10px; 
+                                  background-color: red; padding: 20px 20px;"></button>
+        <button id="green" style = "border: none; border-radius: 10px; 
+                                    background-color: green; padding: 20px 20px;"></button>
+        <button id="blue" style = "border: none; border-radius: 10px; 
+                                   background-color: blue; padding: 20px 20px;"></button>
+    </div><br>
+    <div style="text-align: center;">
+        <button id="1" style="border: none; border-radius: 15px; background-color: #000000; padding: 25px 25px;"></button>
+        <button id="2" style="border: none; border-radius: 15px; background-color: #404040; padding: 25px 25px;"></button>
+        <button id="3" style="border: none; border-radius: 15px; background-color: #808080; padding: 25px 25px;"></button>
+        <button id="4" style="border: none; border-radius: 15px; background-color: #c0c0c0; padding: 25px 25px;"></button>
+        <button id="5" style="border: none; border-radius: 15px; background-color: #f0f0f0; padding: 25px 25px;"></button>
+        <p id="end" style="color: white"><b>정답!!</b></p>
+    </div>
+    <footer style="text-align: center; background-color: cornsilk; color: chocolate">
+        <p>Made by Jaeng</p>
+    </footer>
+    <!-- 0(00), 64(40), 128(80), 192(c0), 256(ff) -->
+    <script>
+        let pool = ["00", "40", "80", "c0", "f0"];
+        let r = 2, g = 2, b = 2, cur = 0;
+        const btnR = document.getElementById("red");
+        const btnG = document.getElementById("green");
+        const btnB = document.getElementById("blue");
+        const btn1 = document.getElementById("1");
+        const btn2 = document.getElementById("2");
+        const btn3 = document.getElementById("3");
+        const btn4 = document.getElementById("4");
+        const btn5 = document.getElementById("5");
+        const qst = document.getElementById("qst");
+        const ans = document.getElementById("ans");
+        const eee = document.getElementById("end");
+        let r0 = Math.floor(Math.random() * 5);
+        let g0 = Math.floor(Math.random() * 5);
+        let b0 = Math.floor(Math.random() * 5);
+        qst.style.backgroundColor = "#"+pool[r0]+pool[g0]+pool[b0];
+        ans.style.backgroundColor = "#"+pool[r]+pool[g]+pool[b];
         
-        <br>
-        <div id="keypad">
-
-        </div>
         
-<!--        키패드 만들기-->
-        <input id="0" type="button" class="pad" value="0" onclick="fillBox(0)"/>
-        <input id="1" type="button" class="pad" value="1" onclick="fillBox(1)"/>
-        <input id="2" type="button" class="pad" value="2" onclick="fillBox(2)"/>
-        <input id="3" type="button" class="pad" value="3" onclick="fillBox(3)"/>
-        <input id="4" type="button" class="pad" value="4" onclick="fillBox(4)"/>
-        <input id="5" type="button" class="pad" value="5" onclick="fillBox(5)"/>
-        <input id="6" type="button" class="pad" value="6" onclick="fillBox(6)"/>
-        <input id="7" type="button" class="pad" value="7" onclick="fillBox(7)"/>
-        <input id="8" type="button" class="pad" value="8" onclick="fillBox(8)"/>
-        <input id="9" type="button" class="pad" value="9" onclick="fillBox(9)"/>
-        <input id="+" type="button" class="pad" value="+" onclick="fillBox2(0)"/>
-        <input id="-" type="button" class="pad" value="-" onclick="fillBox2(1)"/>
-        <input id="×" type="button" class="pad" value="×" onclick="fillBox2(2)"/>
-        <input id="÷" type="button" class="pad" value="÷" onclick="fillBox2(3)"/>
-        <input id="=" type="button" class="pad" value="=" onclick="fillBox2(4)"/>
-        <input id="b" type="button" class="longpad" value="Erase" onclick="erase()"/>
-        <input id="e" type="button" class="longpad" value="Enter" onclick="enter()"/>
-
-        <script>
-            let height = 7; // 줄 갯수 
-            let width = 6; // 단어 길이
-
-            let row = 0; // 현재 줄 (attempt #)
-            let col = 0; // 현재 알파벳 인덱스 
-
-            let gameOver = false;
-            let word = "21÷3=7";
-            
-            let records = "";
-            
-            window.onload = function() {
-                for (let i=0; i<10; i++) {
-                    document.getElementById("keypad").appendChild(document.getElementById(i.toString()));
-                }
-                for (let i=0; i<5; i++) {
-                    document.getElementById("keypad").appendChild(document.getElementById("+-×÷="[i].toString()));
-                }
-                document.getElementById("keypad").appendChild(document.getElementById("b"));
-                document.getElementById("keypad").appendChild(document.getElementById("e"));
-                
-                initialize();
-            };
-            
-            function initialize() {
-                // 보드 만들기
-                for (let r = 0; r < height; r++) {
-                    if (r === 0) {
-                        // 첫 줄 예시로 채우기
-                        for (let c = 0; c < width; c++) {
-                            //<span id="0-0" class="tile"></span>
-                            let tile = document.createElement("span"); 
-                            tile.id = r.toString() + "-" + c.toString(); 
-                            tile.classList.add("tile");
-                            tile.innerText = "2+8=10"[c];
-                            tile.classList.add("eg");
-                            document.getElementById("board").appendChild(tile); 
-                        }
-                    }
-                    else {
-                        for (let c = 0; c < width; c++) {
-                            //<span id="0-0" class="tile"></span>
-                            let tile = document.createElement("span"); 
-                            tile.id = r.toString() + "-" + c.toString(); 
-                            tile.classList.add("tile");
-                            tile.innerText = "";
-                            document.getElementById("board").appendChild(tile); 
-                        }
-                    }
-                    
-                }
-                row += 1;
-            };
-            
-            function fillBox(w) {
-                // 키패드를 누르면 실행되는 부분
-                if(gameOver) return;
-                if (col < width) {
-                    let currTile = document.getElementById(row.toString() + "-" + col.toString());
-                    if (currTile.innerText === "") {
-                        currTile.innerText = w;
-                        col += 1;
-                    }
-                    let target = document.getElementById(w.toString());
-                    target.classList.add("disabled_pad");
-                    target.disabled = true;
-                }
-            };
-            
-            function fillBox2(w) {
-                // 키패드를 누르면 실행되는 부분
-                if(gameOver) return;
-                if (col < width) {
-                    let currTile = document.getElementById(row.toString() + "-" + col.toString());
-                    if (currTile.innerText === "") {
-                        currTile.innerText = "+-×÷="[w];
-                        col += 1;
-                    }
-                }
-                if (w === 4) {
-                    let target = document.getElementById("=");
-                    target.classList.add("disabled_pad");
-                    target.disabled = true;
-                }
-            };
-            
-            function erase() {
-                // 키패드를 누르면 실행되는 부분
-                if(gameOver) return;
-                if (0 < col && col <= width) {
-                    col -= 1;
-                }
-                let currTile = document.getElementById(row.toString() + '-' + col.toString());
-                let w = currTile.innerText;
-                if ("0123456789=".includes(w)) {
-                    let target = document.getElementById(w);
-                    target.classList.remove("disabled_pad");
-                    target.disabled = false;
-                }
-                currTile.innerText = "";
-            };
-            
-            function enter() {
-                // 키패드를 누르면 실행되는 부분
-                if(gameOver) return;
-                if (col === width && validation()) {
-                    update();
-                    // 다시 모든 버튼 활성화
-                    for (let i = 0; i<11; i++) {
-                        let target = document.getElementById("0123456789="[i]);
-                        target.classList.remove("disabled_pad");
-                        target.disabled = false;
-                    }
-                    records += "\n";
-                    row += 1; // start new row
-                    col = 0;  // start at 0 for new row
-                }
-                if (!gameOver && row === height) {
-                    let res = "😭😭 쟁이쿼들 실패!\n\n"+records;
-                    navigator.clipboard.writeText(res);
-                    setTimeout(function(){ alert("결과 클립보드에 복사됨"); }, 500);
-                    gameOver = true;
-//                    document.getElementById("answer").innerText = word;
-                }
-            };
-            
-            function update() {
-                let correct = 0;
-                for (let c = 0; c < width; c++) {
-                    let currTile = document.getElementById(row.toString() + '-' + c.toString());
-                    let letter = currTile.innerText;
-
-                    // letter가 맞는 자리에 있는가?
-                    if (word[c] === letter) {
-                        currTile.classList.add("correct");
-                        correct += 1;
-                        records += "🟩";
-                    } // letter가 정답에 존재하는가? 
-                    else if (word.includes(letter)) {
-                        currTile.classList.add("present");
-                        records += "🟨";
-                    } // letter 정답에 없음? 
-                    else {
-                        currTile.classList.add("absent");
-                        records += "⬜";
-                    }
-                    // 정답을 맞추면 게임오버 
-                    if (correct === width) {
-                        let res = "🤣🤣 쟁이쿼들 성공! "+row.toString()+"/6\n\n"+records;
-                        navigator.clipboard.writeText(res);
-                        setTimeout(function(){ alert("결과 클립보드에 복사됨"); }, 500);
-                        gameOver = true;
-                    }
-                }
-            };
-            
-            function validation() {
-                // 수식이 유효한지 확인
-                let letter = "";
-                for (let c = 0; c < width; c++) {
-                    let currTile = document.getElementById(row.toString() + '-' + c.toString());
-                    letter += currTile.innerText;
-                }
-                // = 은 2~5번째 칸에 반드시 있어야 한다.
-                let eq = letter.indexOf("=");
-                if (eq <= 0 || eq >= 5) {
-                    for (let c = 0; c < width; c++) {
-                        let currTile = document.getElementById(row.toString() + '-' + c.toString());
-                        currTile.classList.add("temp");
-                    }
-                    setTimeout(function(){
-                        for (let c = 0; c < width; c++) {
-                            let currTile = document.getElementById(row.toString() + '-' + c.toString());
-                            currTile.classList.remove("temp");
-                        }
-                    }, 200);
-                    return false;
-                }
-                // 왼쪽 식을 계산
-                let left = 0;
-                let temp_l = 0;
-                let op_l = "=";
-                for (let i = 0; i<eq; i++) {
-                    if ("0123456789".includes(letter[i])) {
-                        temp_l *= 10;
-                        temp_l += parseInt(letter[i]);
-                    }
-                    else {
-                        left = temp_l;
-                        op_l = letter[i];
-                        temp_l = 0;
-                    }
-                }
-                switch(op_l) {
-                    case "=": // just value
-                        left = temp_l;
-                        break;
-                    case "+": // +
-                        left += temp_l;
-                        break;
-                    case "-":
-                        left -= temp_l;
-                        break;
-                    case "×":
-                        left *= temp_l;
-                        break;
-                    case "÷":
-                        left /= temp_l;
-                        break;
-                }
-                // 오른쪽 식을 계산
-                let right = 0;
-                let temp_r = 0;
-                let op_r = "=";
-                for (let i =eq + 1; i<letter.length; i++) {
-                    if ("0123456789".includes(letter[i])) {
-                        temp_r *= 10;
-                        temp_r += parseInt(letter[i]);
-                    }
-                    else {
-                        right = temp_r;
-                        op_r = letter[i];
-                        temp_r = 0;
-                    }
-                }
-                switch(op_r) {
-                    case "=": // just value
-                        right = temp_r;
-                        break;
-                    case "+": // +
-                        right += temp_r;
-                        break;
-                    case "-":
-                        right -= temp_r;
-                        break;
-                    case "×":
-                        right *= temp_r;
-                        break;
-                    case "÷":
-                        right /= temp_r;
-                        break;
-                }
-                
-                if (left === right) return true;
-                // 틀렸다는 이펙트 표시
-                for (let c = 0; c < width; c++) {
-                    let currTile = document.getElementById(row.toString() + '-' + c.toString());
-                    currTile.classList.add("temp");
-                }
-                setTimeout(function(){
-                    for (let c = 0; c < width; c++) {
-                        let currTile = document.getElementById(row.toString() + '-' + c.toString());
-                        currTile.classList.remove("temp");
-                    }
-                }, 200);
-                return false;
+        <!-- R 버튼 누름 -->
+        btnR.addEventListener("click", (e) => {
+            btn1.style.backgroundColor = "#"+pool[0]+pool[g]+pool[b];
+            btn2.style.backgroundColor = "#"+pool[1]+pool[g]+pool[b];
+            btn3.style.backgroundColor = "#"+pool[2]+pool[g]+pool[b];
+            btn4.style.backgroundColor = "#"+pool[3]+pool[g]+pool[b];
+            btn5.style.backgroundColor = "#"+pool[4]+pool[g]+pool[b];
+            cur = 0;
+        });
+        <!-- G 버튼 누름 -->
+        btnG.addEventListener("click", (e) => {
+            btn1.style.backgroundColor = "#"+pool[r]+pool[0]+pool[b];
+            btn2.style.backgroundColor = "#"+pool[r]+pool[1]+pool[b];
+            btn3.style.backgroundColor = "#"+pool[r]+pool[2]+pool[b];
+            btn4.style.backgroundColor = "#"+pool[r]+pool[3]+pool[b];
+            btn5.style.backgroundColor = "#"+pool[r]+pool[4]+pool[b];
+            cur = 1;
+        });
+        <!-- B 버튼 누름 -->
+        btnB.addEventListener("click", (e) => {
+            btn1.style.backgroundColor = "#"+pool[r]+pool[g]+pool[0];
+            btn2.style.backgroundColor = "#"+pool[r]+pool[g]+pool[1];
+            btn3.style.backgroundColor = "#"+pool[r]+pool[g]+pool[2];
+            btn4.style.backgroundColor = "#"+pool[r]+pool[g]+pool[3];
+            btn5.style.backgroundColor = "#"+pool[r]+pool[g]+pool[4];
+            cur = 2;
+        });
+        
+        <!-- 수 버튼 -->
+        btn1.addEventListener("click", (e) => {
+            switch(cur) {
+                case 0:
+                    r = 0;
+                    break;
+                case 1:
+                    g = 0;
+                    break;
+                case 2:
+                    b = 0;
+                    break;
             }
-        </script>
-    </body>
-</html>
+            ans.style.backgroundColor = "#"+pool[r]+pool[g]+pool[b];
+            setTimeout(function(){}, 1000);
+            if (r0==r && g0==g && b0==b) eee.style.color = "black";
+        });
+        btn2.addEventListener("click", (e) => {
+            switch(cur) {
+                case 0:
+                    r = 1;
+                    break;
+                case 1:
+                    g = 1;
+                    break;
+                case 2:
+                    b = 1;
+                    break;
+            }
+            ans.style.backgroundColor = "#"+pool[r]+pool[g]+pool[b];
+            setTimeout(function(){}, 1000);
+            if (r0==r && g0==g && b0==b) eee.style.color = "black";
+        });
+        btn3.addEventListener("click", (e) => {
+            switch(cur) {
+                case 0:
+                    r = 2;
+                    break;
+                case 1:
+                    g = 2;
+                    break;
+                case 2:
+                    b = 2;
+                    break;
+            }
+            ans.style.backgroundColor = "#"+pool[r]+pool[g]+pool[b];
+            setTimeout(function(){}, 1000);
+            if (r0==r && g0==g && b0==b) eee.style.color = "black";
+        });
+        btn4.addEventListener("click", (e) => {
+            switch(cur) {
+                case 0:
+                    r = 3;
+                    break;
+                case 1:
+                    g = 3;
+                    break;
+                case 2:
+                    b = 3;
+                    break;
+            }
+            ans.style.backgroundColor = "#"+pool[r]+pool[g]+pool[b];
+            setTimeout(function(){}, 1000);
+            if (r0==r && g0==g && b0==b) eee.style.color = "black";
+        });
+        btn5.addEventListener("click", (e) => {
+            switch(cur) {
+                case 0:
+                    r = 4;
+                    break;
+                case 1:
+                    g = 4;
+                    break;
+                case 2:
+                    b = 4;
+                    break;
+            }
+            ans.style.backgroundColor = "#"+pool[r]+pool[g]+pool[b];
+            setTimeout(function(){}, 1000);
+            if (r0==r && g0==g && b0==b) eee.style.color = "black";
+        });
+        
+        
+    </script>
+</body>
